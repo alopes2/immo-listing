@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Data", "src\Imm
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8A9CC068-C8DE-4428-8CF3-54C7C802BCF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Services.UnitTests", "UnitTests\ImmoListing.Services.UnitTests\ImmoListing.Services.UnitTests.csproj", "{FAF2ECB4-C8FB-46AF-A49B-C24090493B23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Services.UnitTests", "tests\ImmoListing.Services.UnitTests\ImmoListing.Services.UnitTests.csproj", "{FAF2ECB4-C8FB-46AF-A49B-C24090493B23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
