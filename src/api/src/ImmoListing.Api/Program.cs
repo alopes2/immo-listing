@@ -2,7 +2,11 @@ using ImmoListing.Api.Endpoints;
 using ImmoListing.Api.Json;
 using ImmoListing.Api.Swagger;
 
+using ImmoListing.Business.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddServices();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,7 +20,6 @@ builder.Services.ConfigureHttpJsonOptions(option =>
     option.SerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
 });
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,6 +31,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapListingsEndpoints();
+app.MapEndpoints();
 
 app.Run();

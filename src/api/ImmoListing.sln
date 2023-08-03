@@ -9,13 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Api", "src\Immo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Core", "src\ImmoListing.Core\ImmoListing.Core.csproj", "{A72B43A1-3914-49A1-9CC2-D817D2218119}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Services", "src\ImmoListing.Services\ImmoListing.Services.csproj", "{62D704B0-05EB-49C3-A67A-18E7F57FEACD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Business", "src\ImmoListing.Business\ImmoListing.Business.csproj", "{62D704B0-05EB-49C3-A67A-18E7F57FEACD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Data", "src\ImmoListing.Data\ImmoListing.Data.csproj", "{E3AF61D1-1EA8-4D25-8550-B1863680CD06}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8A9CC068-C8DE-4428-8CF3-54C7C802BCF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Services.UnitTests", "tests\ImmoListing.Services.UnitTests\ImmoListing.Services.UnitTests.csproj", "{FAF2ECB4-C8FB-46AF-A49B-C24090493B23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmoListing.Business.UnitTests", "tests\ImmoListing.Business.UnitTests\ImmoListing.Business.UnitTests.csproj", "{FAF2ECB4-C8FB-46AF-A49B-C24090493B23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

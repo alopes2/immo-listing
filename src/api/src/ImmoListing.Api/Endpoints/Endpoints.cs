@@ -1,10 +1,10 @@
-using ImmoListing.Api.Endpoints.MapGroups;
+using ImmoListing.Api.Endpoints.Listings;
 
 namespace ImmoListing.Api.Endpoints;
 
-public static class Listings
+public static class Endpoints
 {
-    public static void MapListingsEndpoints(this WebApplication app)
+    public static void MapEndpoints(this WebApplication app)
     {
             app.MapGroup(ListingsMapGroup.Prefix)
                 .MapListings()

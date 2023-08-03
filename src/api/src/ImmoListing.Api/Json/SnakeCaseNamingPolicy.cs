@@ -1,7 +1,5 @@
-
-using System.Text;
 using System.Text.Json;
-using ImmoListing.Api.Extensions;
+using ImmoListing.Core.Extensions;
 
 namespace ImmoListing.Api.Json;
 

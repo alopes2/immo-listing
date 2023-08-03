@@ -1,4 +1,4 @@
-namespace ImmoListing.Services.UnitTests;
+namespace ImmoListing.Business.UnitTests;
 
 public class UnitTest1
 {

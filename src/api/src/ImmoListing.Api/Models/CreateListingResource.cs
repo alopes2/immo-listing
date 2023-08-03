@@ -1,11 +1,11 @@
 namespace ImmoListing.Api.Models;
 
-public record CreateListingResource(
+public record SaveListingResource(
         string Name,
-        PostalAddress PostalAddress,
+        PostalAddressResource PostalAddress,
         string Description,
-        RealEstateListingBuildingType BuildingType,
-        double LatestPriceEur,
+        RealEstateListingBuildingTypeResource BuildingType,
+        long LatestPriceEur,
         double SurfaceAreaM2,
         int RoomsCount,
         int BedroomsCount,

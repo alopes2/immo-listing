@@ -1,4 +1,4 @@
-using ImmoListing.Api.Extensions;
+using ImmoListing.Core.Extensions;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

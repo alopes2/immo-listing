@@ -11,4 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ImmoListing.Core\ImmoListing.Core.csproj" />
+    <ProjectReference Include="..\ImmoListing.Business\ImmoListing.Business.csproj" />
+    <ProjectReference Include="..\ImmoListing.Data\ImmoListing.Data.csproj" />
+  </ItemGroup>
+
 </Project>

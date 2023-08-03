@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace ImmoListing.Api.Extensions;
+namespace ImmoListing.Core.Extensions;
 
 public static class StringExtensions
 {

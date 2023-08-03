@@ -1,6 +1,6 @@
 namespace ImmoListing.Api.Models;
 
-public record PostalAddress(
+public record PostalAddressResource(
         string StreetAddress,
         string PostalCode,
         string City,
