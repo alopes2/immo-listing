@@ -1,0 +1,45 @@
+name: (Client) Build and test
+
+defaults:
+  run:
+    working-directory: src/client
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: 
+      - src/client/**
+  pull_request:
+    branches: [ "main" ]
+    paths: 
+      - src/client/**
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    - name: NPM install
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    # When tests are set, enable
+    # - name: Test
+    #   run: npm run test
+
+    - name: Generate build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build_${{ github.sha }}
+        path: src/client/dist
+        retention-days: 5
