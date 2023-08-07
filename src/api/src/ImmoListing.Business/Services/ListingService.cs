@@ -1,51 +1,113 @@
 using ImmoListing.Core.Services;
 using ImmoListing.Core.Models;
+using Entities = ImmoListing.Data.Entities;
 using OneOf;
 using OneOf.Types;
+using ImmoListing.Data;
+using Microsoft.EntityFrameworkCore;
+using ImmoListing.Business.Mappers;
 
 namespace ImmoListing.Business.Services;
 
 public class ListingService : IListingsService
 {
-    public async Task<OneOf<Listing, Error>> CreateListing(Listing newListing)
+    private readonly ImmoListingDbContext _dbContext;
+
+    public ListingService(ImmoListingDbContext dbContext)
     {
-        await Task.Delay(1);
-        
-        return new Error();
+        _dbContext = dbContext;
+    }
+
+    public async Task<OneOf<Listing, Error>> CreateListing(CreateListing newListing)
+    {
+        var entity = ListingMapper.ToCreateEntity(newListing);
+
+        await _dbContext.Listings.AddAsync(entity);
+
+        await _dbContext.SaveChangesAsync();
+
+        var listingModel = ListingMapper.ToCoreModel(entity);
+
+        return listingModel;
     }
 
     public async Task<OneOf<Listing, NotFound, Error>> GetListingById(long listingId)
     {
-        await Task.Delay(1);
+        var listing = await _dbContext.Listings
+            .Include(l => l.Prices.OrderByDescending(p => p.CreatedDate))
+            .SingleOrDefaultAsync(l => l.Id == listingId);
 
-        return new NotFound();
+        if (listing is null)
+        {
+            return new NotFound();
+        }
+
+        var listingModel = ListingMapper.ToCoreModel(listing);
+
+        return listingModel;
     }
 
     public async Task<OneOf<IEnumerable<Listing>, Error>> GetListings()
     {
-        await Task.Delay(1);
+        var listings = await _dbContext.Listings
+            .Include(l => l.Prices.OrderByDescending(p => p.CreatedDate))
+            .ToListAsync();
 
-        return new Error();
+        var listingModels = ListingMapper.ToCoreModel(listings);
+
+        return OneOf<IEnumerable<Listing>, Error>.FromT0(listingModels);
     }
 
-    public async Task<OneOf<Listing, NotFound, Error>> UpdateListing(Listing listingToUpdate)
+    public async Task<OneOf<Success, NotFound, Error>> UpdateListing(Listing listingToUpdate)
     {
-        await Task.Delay(1);
+        var foundListing = await _dbContext.Listings
+            .Include(l => l.Prices.OrderByDescending(p => p.CreatedDate))
+            .SingleOrDefaultAsync(l => l.Id == listingToUpdate.Id);
 
-        return new NotFound();
+        if (foundListing is null)
+        {
+            return new NotFound();
+        }
+        
+        var latestPrice = foundListing.Prices.FirstOrDefault();
+
+        if (listingToUpdate.LatestPriceEur != latestPrice?.Value)
+        {
+            foundListing.Prices.Add(new Entities.Price { 
+                Value = listingToUpdate.LatestPriceEur
+                });
+        }
+
+        foundListing.Name = listingToUpdate.Name;
+        foundListing.BedroomsCount = listingToUpdate.BedroomsCount;
+        foundListing.RoomsCount = listingToUpdate.RoomsCount;
+        foundListing.BuildingType = Enum.Parse<Entities.BuildingType>(listingToUpdate.BuildingType.ToString());
+        foundListing.ContactPhoneNumber = listingToUpdate.ContactPhoneNumber;
+        foundListing.Description = listingToUpdate.Description;
+        foundListing.Address = ListingMapper.ToEntityAddress(listingToUpdate.PostalAddress);
+        foundListing.RoomsCount = listingToUpdate.RoomsCount;
+        foundListing.SurfaceAreaM2 = listingToUpdate.SurfaceAreaM2;
+
+        foundListing.UpdatedDate = DateTime.UtcNow;
+
+        await _dbContext.SaveChangesAsync();
+
+        return new Success();
     }
 
     public async Task<OneOf<Success, NotFound, Error>> DeleteListingById(long listingId)
     {
-        await Task.Delay(1);
+        var foundListing = await _dbContext.Listings.FindAsync(listingId);
 
-        return new NotFound();
-    }
+        if (foundListing is null)
+        {
+            return new NotFound();
+        }
 
-    public async Task<OneOf<IEnumerable<Price>, NotFound, Error>> GetListingPrices(long listingId)
-    {
-        await Task.Delay(1);
+        _dbContext.Listings.Remove(foundListing);
 
-        return new NotFound();
+        await _dbContext.SaveChangesAsync();
+
+        return new Success();
     }
 }

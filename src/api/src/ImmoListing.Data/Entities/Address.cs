@@ -1,6 +1,6 @@
-namespace ImmoListing.Core.Models;
+namespace ImmoListing.Data.Entities;
 
-public class PostalAddress
+public class Address
 {
     public string Street { get; set; }
     
@@ -10,3 +10,4 @@ public class PostalAddress
 
     public string Country { get; set; }
 }
+

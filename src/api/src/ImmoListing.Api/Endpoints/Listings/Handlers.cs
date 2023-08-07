@@ -1,3 +1,5 @@
+using FluentValidation;
+using ImmoListing.Api.Extensions;
 using ImmoListing.Api.Mappers;
 using ImmoListing.Api.Models;
 using ImmoListing.Core.Services;
@@ -9,19 +11,28 @@ namespace ImmoListing.Api.Endpoints.Listings;
 
 public static class Handlers
 {
-    public static async Task<Results<Ok<ListingResource>, StatusCodeHttpResult, BadRequest>> CreateListingAsync([FromBody] SaveListingResource createListingResource, IListingsService listingsService)
+    public static async Task<Results<Ok<ListingResource>, StatusCodeHttpResult, BadRequest<IEnumerable<ValidationError>>>> CreateListingAsync(
+        [FromBody] SaveListingResource createListingResource,
+        IListingsService listingsService,
+        IValidator<SaveListingResource> validator)
     {
-        var listing = ListingMapper.ToListing(createListingResource);
+        var validationResult = await validator.ValidateAsync(createListingResource);
+        if (!validationResult.IsValid)
+        {
+            return TypedResults.BadRequest(validationResult.GetValidationErrors());
+        }
+        var listing = ListingMapper.ToCreateListing(createListingResource);
 
         var createListingResult = await listingsService.CreateListing(listing);
 
-        return createListingResult.Match<Results<Ok<ListingResource>, StatusCodeHttpResult, BadRequest>>(
+        return createListingResult.Match<Results<Ok<ListingResource>, StatusCodeHttpResult, BadRequest<IEnumerable<ValidationError>>>>(
             newListing => TypedResults.Ok(ListingMapper.ToListingResource(newListing)),
             error => TypedResults.StatusCode(StatusCodes.Status500InternalServerError)
         );
     }
 
-    public static async Task<Results<Ok<IEnumerable<ListingResource>>, StatusCodeHttpResult>> GetListingsAsync(IListingsService listingsService)
+    public static async Task<Results<Ok<IEnumerable<ListingResource>>, StatusCodeHttpResult>> GetListingsAsync(
+        IListingsService listingsService)
     {
         var getListingsResult = await listingsService.GetListings();
 
@@ -36,69 +47,77 @@ public static class Handlers
         );
     }
 
-    public static async Task<Results<Ok<ListingResource>, BadRequest, NotFound, StatusCodeHttpResult>> GetListingByIdAsync([FromRoute] long listingId, IListingsService listingsService)
+    public static async Task<Results<Ok<ListingResource>, BadRequest<ValidationError>, NotFound, StatusCodeHttpResult>> GetListingByIdAsync(
+        [FromRoute] long listingId,
+        IListingsService listingsService)
     {
         if (listingId == 0)
         {
-            return TypedResults.BadRequest();
+            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[]{"listingId not provided"}));
         }
 
         var getListingResult = await listingsService.GetListingById(listingId);
 
-        return getListingResult.Match<Results<Ok<ListingResource>, BadRequest, NotFound, StatusCodeHttpResult>>(
+        return getListingResult.Match<Results<Ok<ListingResource>, BadRequest<ValidationError>, NotFound, StatusCodeHttpResult>>(
             newListing => TypedResults.Ok(ListingMapper.ToListingResource(newListing)),
             notFound => TypedResults.NotFound(),
             error => TypedResults.StatusCode(StatusCodes.Status500InternalServerError)
         );
     }
 
-    public static async Task<Results<Ok<ListingResource>, BadRequest, NotFound, StatusCodeHttpResult>> UpdateListingByIdAsync(
+    public static async Task<Results<Ok, BadRequest<IEnumerable<ValidationError>>, NotFound, StatusCodeHttpResult>> UpdateListingByIdAsync(
         [FromRoute] long listingId,
         [FromBody] SaveListingResource saveListingResource,
-        IListingsService listingsService)
+        IListingsService listingsService,
+        IValidator<SaveListingResource> validator)
     {
-        if (listingId == 0)
+        var validationResult = await validator.ValidateAsync(saveListingResource);
+        if (listingId == 0 || !validationResult.IsValid)
         {
-            return TypedResults.BadRequest();
+            return TypedResults.BadRequest(validationResult.GetValidationErrors());
         }
 
         var listing = ListingMapper.ToListing(saveListingResource, listingId);
 
         var updateListingResult = await listingsService.UpdateListing(listing);
 
-        return updateListingResult.Match<Results<Ok<ListingResource>, BadRequest, NotFound, StatusCodeHttpResult>>(
-            updatedListing => TypedResults.Ok(ListingMapper.ToListingResource(updatedListing)),
+        return updateListingResult.Match<Results<Ok, BadRequest<IEnumerable<ValidationError>>, NotFound, StatusCodeHttpResult>>(
+            success => TypedResults.Ok(),
             notFound => TypedResults.NotFound(),
             error => TypedResults.StatusCode(StatusCodes.Status500InternalServerError)
         );
     }
 
-    public static async Task<Results<Ok<IEnumerable<PriceResource>>, BadRequest, NotFound, StatusCodeHttpResult>> GetListingPricesAsync([FromRoute] long listingId, IListingsService listingsService)
+    public static async Task<Results<Ok<IEnumerable<PriceResource>>, BadRequest<ValidationError>, NotFound, StatusCodeHttpResult>> GetListingPricesAsync(
+        [FromRoute] long listingId,
+        IPriceService priceService)
     {
         if (listingId == 0)
         {
-            return TypedResults.BadRequest();
+            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[]{"listingId not provided"}));
         }
 
-        var getListingPricesResult = await listingsService.GetListingPrices(listingId);
+        var getListingPricesResult = await priceService.GetListingPrices(listingId);
 
-        return getListingPricesResult.Match<Results<Ok<IEnumerable<PriceResource>>, BadRequest, NotFound, StatusCodeHttpResult>>(
+        return getListingPricesResult.Match<Results<Ok<IEnumerable<PriceResource>>, BadRequest<ValidationError>, NotFound, StatusCodeHttpResult>>(
             listingPrices => TypedResults.Ok(PriceMapper.ToPriceResources(listingPrices)),
             notFound => TypedResults.NotFound(),
             error => TypedResults.StatusCode(StatusCodes.Status500InternalServerError)
         );
     }
 
-    public static async Task<Results<NoContent, BadRequest, NotFound, StatusCodeHttpResult>> DeleteListingByIdAsync([FromRoute] int listingId, IListingsService listingsService)
+    public static async Task<Results<NoContent, BadRequest<ValidationError>, NotFound, StatusCodeHttpResult>> DeleteListingByIdAsync(
+        [FromRoute] int listingId,
+        IListingsService listingsService)
     {
         if (listingId == 0)
         {
-            return TypedResults.BadRequest();
+            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[]{"listingId not provided"}));
         }
 
         var deleteListingResult = await listingsService.DeleteListingById(listingId);
 
-        return deleteListingResult.Match<Results<NoContent, BadRequest, NotFound, StatusCodeHttpResult>>(
+        return deleteListingResult.Match<Results<NoContent, BadRequest<ValidationError>, NotFound, StatusCodeHttpResult>>(
             success => TypedResults.NoContent(),
             notFound => TypedResults.NotFound(),
             error => TypedResults.StatusCode(StatusCodes.Status500InternalServerError)

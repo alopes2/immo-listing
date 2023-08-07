@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImmoListing.Core\ImmoListing.Core.csproj" />
+    <ProjectReference Include="..\ImmoListing.Data\ImmoListing.Data.csproj" />
   </ItemGroup>
 
 

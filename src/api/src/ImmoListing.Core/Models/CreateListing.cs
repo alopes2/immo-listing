@@ -1,11 +1,7 @@
-using System.Collections.ObjectModel;
-
 namespace ImmoListing.Core.Models;
 
-public class Listing
+public class CreateListing
 {
-    public long Id { get; set; }
-
     public string Name { get; set; }
 
     public PostalAddress PostalAddress { get; set; }
@@ -23,16 +19,4 @@ public class Listing
     public int BedroomsCount { get; set; }
 
     public string ContactPhoneNumber { get; set; }
-
-    public ICollection<Price> Prices { get; set; }
-
-    public DateTime CreatedDate  { get; set; }
-    
-    public DateTime UpdatedDate  { get; set; }
-
-    public Listing()
-    {
-        Prices = new Collection<Price>();
-        
-    }
 }

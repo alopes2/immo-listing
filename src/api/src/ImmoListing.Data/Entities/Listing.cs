@@ -1,20 +1,20 @@
 using System.Collections.ObjectModel;
 
-namespace ImmoListing.Core.Models;
+namespace ImmoListing.Data.Entities;
 
 public class Listing
 {
+    public const string TableName = "Listings";
+
     public long Id { get; set; }
 
     public string Name { get; set; }
 
-    public PostalAddress PostalAddress { get; set; }
+    public Address Address { get; set; }
 
     public string Description { get; set; }
 
-    public RealEstateListingBuildingType BuildingType { get; set; }
-
-    public long LatestPriceEur { get; set; }
+    public BuildingType BuildingType { get; set; }
 
     public double SurfaceAreaM2 { get; set; }
 
@@ -24,15 +24,14 @@ public class Listing
 
     public string ContactPhoneNumber { get; set; }
 
-    public ICollection<Price> Prices { get; set; }
-
-    public DateTime CreatedDate  { get; set; }
+    public DateTime CreatedDate  { get; set; } = DateTime.UtcNow;
     
     public DateTime UpdatedDate  { get; set; }
+
+    public ICollection<Price> Prices { get; set; }
 
     public Listing()
     {
         Prices = new Collection<Price>();
-        
     }
 }

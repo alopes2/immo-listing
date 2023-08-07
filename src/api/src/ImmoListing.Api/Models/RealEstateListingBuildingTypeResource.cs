@@ -5,7 +5,7 @@ namespace ImmoListing.Api.Models;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum RealEstateListingBuildingTypeResource
 {
-    STUDIO = 0,
-    APARTMENT = 1,
-    HOUSE = 2,
+    STUDIO = 1,
+    APARTMENT,
+    HOUSE,
 }
