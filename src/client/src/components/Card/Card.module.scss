@@ -1,0 +1,31 @@
+.Card {
+  text-align: left;
+  border: 1px solid gray;
+  border-radius: 30px;
+  padding: 1em;
+  margin: 1em;
+  background-color: rgba(0, 0, 0, 20%);
+
+  .Price {
+    font-weight: bold;
+  }
+
+  .BuildingDetails {
+    display: flex;
+    flex-wrap: wrap;
+
+    div {
+      margin-right: 1em;
+    }
+
+    :last-child {
+      margin-right: 0;
+    }
+  }
+
+  article {
+    section {
+      padding-bottom: 20px;
+    }
+  }
+}
