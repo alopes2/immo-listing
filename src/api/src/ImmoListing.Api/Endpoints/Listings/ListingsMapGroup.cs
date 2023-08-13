@@ -20,7 +20,8 @@ public static class ListingsMapGroup
         router.MapGet("/", Handlers.GetListingsAsync)
             .Produces<IEnumerable<ListingResource>>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status500InternalServerError);
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithName("GetListings");
 
         router.MapGet("/{listingId}", Handlers.GetListingByIdAsync)
             .Produces<ListingResource>(StatusCodes.Status200OK, MediaTypeNames.Application.Json)

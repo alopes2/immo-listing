@@ -17,16 +17,17 @@ namespace ImmoListing.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     BuildingType = table.Column<int>(type: "int", nullable: false),
                     SurfaceAreaM2 = table.Column<double>(type: "float", nullable: false),
                     RoomsCount = table.Column<int>(type: "int", nullable: false),
                     BedroomsCount = table.Column<int>(type: "int", nullable: false),
+                    LatestPriceEur = table.Column<long>(type: "bigint", nullable: false),
                     ContactPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)

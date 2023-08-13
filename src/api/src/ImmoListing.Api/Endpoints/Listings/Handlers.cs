@@ -32,9 +32,11 @@ public static class Handlers
     }
 
     public static async Task<Results<Ok<IEnumerable<ListingResource>>, StatusCodeHttpResult>> GetListingsAsync(
+        GetListingsQueryParams queryParams,
         IListingsService listingsService)
     {
-        var getListingsResult = await listingsService.GetListings();
+        var query = ListingMapper.ToCoreQueryParams(queryParams);
+        var getListingsResult = await listingsService.GetListings(query);
 
         return getListingsResult.Match<Results<Ok<IEnumerable<ListingResource>>, StatusCodeHttpResult>>(
             listings =>
@@ -53,7 +55,7 @@ public static class Handlers
     {
         if (listingId == 0)
         {
-            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[]{"listingId not provided"}));
+            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[] { "listingId not provided" }));
         }
 
         var getListingResult = await listingsService.GetListingById(listingId);
@@ -94,7 +96,7 @@ public static class Handlers
     {
         if (listingId == 0)
         {
-            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[]{"listingId not provided"}));
+            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[] { "listingId not provided" }));
         }
 
         var getListingPricesResult = await priceService.GetListingPrices(listingId);
@@ -112,7 +114,7 @@ public static class Handlers
     {
         if (listingId == 0)
         {
-            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[]{"listingId not provided"}));
+            return TypedResults.BadRequest(new ValidationError(nameof(listingId), new string[] { "listingId not provided" }));
         }
 
         var deleteListingResult = await listingsService.DeleteListingById(listingId);

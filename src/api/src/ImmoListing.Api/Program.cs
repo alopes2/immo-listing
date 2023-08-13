@@ -17,6 +17,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SchemaFilter<SnakeCaseSchemaFilter>();
+    c.ParameterFilter<SnakeCaseParameterFilter>();
+    c.OperationFilter<OperationFilters>();
 });
 
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
@@ -27,7 +29,6 @@ builder.Services.ConfigureHttpJsonOptions(option =>
 });
 
 builder.Services.AddCors();
-
 builder.AddDatabase();
 
 var app = builder.Build();

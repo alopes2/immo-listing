@@ -21,11 +21,24 @@ public static class ListingMapper
             ContactPhoneNumber = listingResource.ContactPhoneNumber
         };
     }
+    public static Core.Models.GetListingsQueryParams ToCoreQueryParams(Api.Models.GetListingsQueryParams query)
+    {
+        var page = query.Page > 0 ? query.Page - 1 : 0;
+        var size = query.Size > 0 ? query.Size : 1;
+
+        return new Core.Models.GetListingsQueryParams
+        {
+            Name = query.Name,
+            BuildingType = query.BuildingType is not null ? Enum.Parse<RealEstateListingBuildingType>(query.BuildingType.GetValueOrDefault().ToString()) : null,
+            MaxPrice = query.MaxPrice,
+            MinPrice = query.MinPrice,
+            Page = page,
+            Size = size,
+        };
+    }
 
     public static ListingResource ToListingResource(Listing listing)
     {
-        var latestPrice = listing.Prices.FirstOrDefault();
-
         return new ListingResource
         (
             Id: listing.Id,
@@ -33,7 +46,7 @@ public static class ListingMapper
             PostalAddress: ToPostalAddressResource(listing.PostalAddress),
             Description: listing.Description,
             BuildingType: Enum.Parse<RealEstateListingBuildingTypeResource>(listing.BuildingType.ToString()),
-            LatestPriceEur: latestPrice?.PriceEur ?? 0,
+            LatestPriceEur: listing.LatestPriceEur,
             SurfaceAreaM2: listing.SurfaceAreaM2,
             RoomsCount: listing.RoomsCount,
             BedroomsCount: listing.BedroomsCount,
@@ -48,7 +61,7 @@ public static class ListingMapper
         return listings.Select(ToListingResource);
     }
 
-    internal static CreateListing ToCreateListing(SaveListingResource createListingResource)
+    public static CreateListing ToCreateListing(SaveListingResource createListingResource)
     {
         return new CreateListing
         {

@@ -5,6 +5,7 @@
   padding: 1em;
   margin: 1em;
   background-color: rgba(0, 0, 0, 20%);
+  max-width: 300px;
 
   .Price {
     font-weight: bold;
@@ -13,13 +14,11 @@
   .BuildingDetails {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
 
-    div {
-      margin-right: 1em;
-    }
-
-    :last-child {
-      margin-right: 0;
+    .Spacer {
+      margin: 2px 10px;
     }
   }
 

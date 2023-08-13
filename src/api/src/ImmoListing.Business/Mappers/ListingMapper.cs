@@ -17,6 +17,7 @@ public static class ListingMapper
             ContactPhoneNumber = listing.ContactPhoneNumber,
             Description = listing.Description,
             Prices = prices,
+            LatestPriceEur = listing.LatestPriceEur,
             Name = listing.Name,
             PostalAddress = ToCorePostalAddress(listing.Address),
             RoomsCount = listing.RoomsCount,
@@ -33,26 +34,6 @@ public static class ListingMapper
         return listings;
     }
 
-    public static Listing ToEntity(CoreModels.Listing listing)
-    {
-        var entity = new Listing
-        {
-            Id = listing.Id,
-            BedroomsCount = listing.BedroomsCount,
-            BuildingType = Enum.Parse<BuildingType>(listing.BuildingType.ToString()),
-            ContactPhoneNumber = listing.ContactPhoneNumber,
-            Description = listing.Description,
-            Name = listing.Name,
-            Address = ToEntityAddress(listing.PostalAddress),
-            RoomsCount = listing.RoomsCount,
-            SurfaceAreaM2 = listing.SurfaceAreaM2,
-            CreatedDate = listing.CreatedDate,
-            UpdatedDate = listing.UpdatedDate
-        };
-
-        return entity;
-    }
-
     public static Listing ToCreateEntity(CoreModels.CreateListing listing)
     {
         var entity = new Listing
@@ -65,6 +46,7 @@ public static class ListingMapper
             Address = ToEntityAddress(listing.PostalAddress),
             RoomsCount = listing.RoomsCount,
             SurfaceAreaM2 = listing.SurfaceAreaM2,
+            LatestPriceEur = listing.LatestPriceEur,
             UpdatedDate = DateTime.UtcNow
         };
 

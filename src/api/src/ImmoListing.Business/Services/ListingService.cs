@@ -6,16 +6,21 @@ using OneOf.Types;
 using ImmoListing.Data;
 using Microsoft.EntityFrameworkCore;
 using ImmoListing.Business.Mappers;
+using Microsoft.Extensions.Logging;
 
 namespace ImmoListing.Business.Services;
 
 public class ListingService : IListingsService
 {
     private readonly ImmoListingDbContext _dbContext;
+    private readonly ILogger _logger;
 
-    public ListingService(ImmoListingDbContext dbContext)
+    public ListingService(
+        ImmoListingDbContext dbContext,
+        ILogger<ListingService> logger)
     {
         _dbContext = dbContext;
+        _logger = logger;
     }
 
     public async Task<OneOf<Listing, Error>> CreateListing(CreateListing newListing)
@@ -34,7 +39,6 @@ public class ListingService : IListingsService
     public async Task<OneOf<Listing, NotFound, Error>> GetListingById(long listingId)
     {
         var listing = await _dbContext.Listings
-            .Include(l => l.Prices.OrderByDescending(p => p.CreatedDate))
             .SingleOrDefaultAsync(l => l.Id == listingId);
 
         if (listing is null)
@@ -47,10 +51,38 @@ public class ListingService : IListingsService
         return listingModel;
     }
 
-    public async Task<OneOf<IEnumerable<Listing>, Error>> GetListings()
+    public async Task<OneOf<IEnumerable<Listing>, Error>> GetListings(GetListingsQueryParams queryParams)
     {
-        var listings = await _dbContext.Listings
+        var startingIndex = queryParams.Page * queryParams.Size;
+
+        var listingsQuery = _dbContext.Listings
+            .Skip(startingIndex)
+            .Take(queryParams.Size)
             .Include(l => l.Prices.OrderByDescending(p => p.CreatedDate))
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(queryParams.Name))
+        {
+            listingsQuery = listingsQuery.Where(l => l.Name.Contains(queryParams.Name));
+        }
+
+        if (queryParams.BuildingType is not null)
+        {
+            Enum.TryParse<Entities.BuildingType>(queryParams.BuildingType.ToString(), out var entityBuildingType);
+            listingsQuery = listingsQuery.Where(l => l.BuildingType.Equals(entityBuildingType));
+        }
+
+        if (queryParams.MinPrice is not null)
+        {
+            listingsQuery = listingsQuery.Where(l => l.LatestPriceEur >= queryParams.MinPrice);
+        }
+
+        if (queryParams.MaxPrice is not null)
+        {
+            listingsQuery = listingsQuery.Where(l => l.LatestPriceEur <= queryParams.MaxPrice);
+        }
+
+        var listings = await listingsQuery
             .ToListAsync();
 
         var listingModels = ListingMapper.ToCoreModel(listings);
@@ -68,14 +100,15 @@ public class ListingService : IListingsService
         {
             return new NotFound();
         }
-        
+
         var latestPrice = foundListing.Prices.FirstOrDefault();
 
         if (listingToUpdate.LatestPriceEur != latestPrice?.Value)
         {
-            foundListing.Prices.Add(new Entities.Price { 
+            foundListing.Prices.Add(new Entities.Price
+            {
                 Value = listingToUpdate.LatestPriceEur
-                });
+            });
         }
 
         foundListing.Name = listingToUpdate.Name;

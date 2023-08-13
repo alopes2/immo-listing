@@ -45,11 +45,16 @@ namespace ImmoListing.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("LatestPriceEur")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("RoomsCount")
                         .HasColumnType("int");
@@ -98,22 +103,26 @@ namespace ImmoListing.Data.Migrations
 
                             b1.Property<string>("City")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
                                 .HasColumnName("City");
 
                             b1.Property<string>("Country")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
                                 .HasColumnName("Country");
 
                             b1.Property<string>("PostalCode")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
                                 .HasColumnName("PostalCode");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)")
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
                                 .HasColumnName("Street");
 
                             b1.HasKey("ListingId");

@@ -14,6 +14,7 @@ const Card: React.FC<{ listing: Listing }> = ({ listing }) => (
     <hr />
     <div className={classes.BuildingDetails}>
       <div>Rooms: {listing.rooms_count}</div>
+      <span className={classes.Spacer}>|</span>
       <div>Bedrooms: {listing.bedrooms_count}</div>
     </div>
     <hr />

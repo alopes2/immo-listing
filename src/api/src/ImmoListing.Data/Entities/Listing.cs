@@ -22,11 +22,13 @@ public class Listing
 
     public int BedroomsCount { get; set; }
 
+    public long LatestPriceEur { get; set; }
+
     public string ContactPhoneNumber { get; set; }
 
-    public DateTime CreatedDate  { get; set; } = DateTime.UtcNow;
-    
-    public DateTime UpdatedDate  { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedDate { get; set; }
 
     public ICollection<Price> Prices { get; set; }
 
