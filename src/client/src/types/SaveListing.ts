@@ -1,14 +1,11 @@
 import { PostalAddress } from './PostalAddress';
 
-export interface Listing {
-  id: number;
-  created_date: string;
-  updated_date: string;
+export interface SaveListing {
   name: string;
   postal_address: PostalAddress;
   description: string;
   building_type: string;
-  latest_price_eur: number;
+  latest_price_eur: string;
   surface_area_m2: string;
   rooms_count: string;
   bedrooms_count: string;

@@ -6,7 +6,11 @@ type ListingsSearchFormProps = {
   query: GetListingsQuery;
   updateQuery: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    key: string
+    key: keyof GetListingsQuery
+  ) => void;
+  limitInputToTwoDecimalPoints: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    key: keyof GetListingsQuery
   ) => void;
   search: (event: FormEvent) => void;
 };
@@ -14,7 +18,8 @@ type ListingsSearchFormProps = {
 const ListingsSearchForm: React.FC<ListingsSearchFormProps> = ({
   query,
   updateQuery,
-  search
+  search,
+  limitInputToTwoDecimalPoints
 }) => (
   <form className={classes.ListingsSearch} onSubmit={search}>
     <label>
@@ -43,7 +48,9 @@ const ListingsSearchForm: React.FC<ListingsSearchFormProps> = ({
       <input
         type="number"
         placeholder="Min price"
+        step="0.01"
         onChange={(e) => updateQuery(e, 'min_price')}
+        onBlur={(e) => limitInputToTwoDecimalPoints(e, 'min_price')}
         value={query['min_price']}
       />
     </label>
@@ -52,7 +59,9 @@ const ListingsSearchForm: React.FC<ListingsSearchFormProps> = ({
       <input
         type="number"
         placeholder="Max price"
+        step="0.01"
         onChange={(e) => updateQuery(e, 'max_price')}
+        onBlur={(e) => limitInputToTwoDecimalPoints(e, 'max_price')}
         value={query['max_price']}
       />
     </label>

@@ -1,11 +1,11 @@
+import { RouterProvider } from 'react-router-dom';
 import './App.css';
-import ListingsView from './views/Listings/ListingsView';
+import router from './routes/router';
 
 function App() {
   return (
     <>
-      <h1>Immo Listing</h1>
-      <ListingsView />
+      <RouterProvider router={router} />
     </>
   );
 }

@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { FormEvent, useState } from 'react';
 import { GetListingsQuery } from '../../types/GetListingsQuery';
 import ListingsSearchForm from './ListingsSearchForm/ListingsSearchForm';
+import { Link } from 'react-router-dom';
 
 const queryInitialValue: GetListingsQuery = {
   name: '',
@@ -20,11 +21,15 @@ const ListingsView = () => {
 
   async function fetchStuff(): Promise<Listing[]> {
     const queryValues = Object.keys(query)
-      .map((value: string) =>
-        query[value as keyof GetListingsQuery] !== ''
-          ? value + '=' + query[value as keyof GetListingsQuery]
-          : ''
-      )
+      .map((key: string) => {
+        let value = query[key as keyof GetListingsQuery];
+
+        if (isPriceKey(key as keyof GetListingsQuery) && value !== '') {
+          value = (+value * 100).toFixed(0);
+        }
+
+        return value !== '' ? key + '=' + value : '';
+      })
       .filter((value: string) => value !== '');
 
     const queryParams = queryValues.join('&');
@@ -42,15 +47,12 @@ const ListingsView = () => {
     e.preventDefault();
 
     await refetch();
-
-    setQueryParams(queryInitialValue);
   };
 
   const updateQuery = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    key: string
+    key: keyof GetListingsQuery
   ) => {
-    console.log(e.target.value);
     setQueryParams((prev: GetListingsQuery) => {
       return {
         ...prev,
@@ -59,12 +61,35 @@ const ListingsView = () => {
     });
   };
 
+  const limitInputToTwoDecimalPoints = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: keyof GetListingsQuery
+  ) => {
+    let value = e.target.value;
+    if (isPriceKey(key) && value.includes('.')) {
+      value = (+value).toFixed(2);
+
+      setQueryParams((prev: GetListingsQuery) => {
+        return {
+          ...prev,
+          [key]: value
+        };
+      });
+    }
+  };
+
+  function isPriceKey(key: keyof GetListingsQuery) {
+    return key === 'min_price' || key === 'max_price';
+  }
+
   return (
     <>
+      <Link to="/create-listing">New Listing</Link>
       <ListingsSearchForm
         query={query}
         search={search}
         updateQuery={updateQuery}
+        limitInputToTwoDecimalPoints={limitInputToTwoDecimalPoints}
       />
       <CardList listings={data} />
     </>
