@@ -1,8 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 const RootLayout = () => (
   <>
-    <h1>Immo Listing</h1>
+    <h1>
+      <Link to="/">Immo Listing</Link>
+    </h1>
     <Outlet />
   </>
 );

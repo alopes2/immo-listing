@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
 import { Listing } from '../../types/Listing';
 import classes from './Card.module.scss';
 
 const Card: React.FC<{ listing: Listing }> = ({ listing }) => (
   <div className={classes.Card}>
+    <Link to={`/${listing.id}`}>Details</Link>
     <h2>{listing.name}</h2>
     <p>{listing.building_type}</p>
     <p className={classes.Price}>

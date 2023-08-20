@@ -101,10 +101,9 @@ public class ListingService : IListingsService
             return new NotFound();
         }
 
-        var latestPrice = foundListing.Prices.FirstOrDefault();
-
-        if (listingToUpdate.LatestPriceEur != latestPrice?.Value)
+        if (listingToUpdate.LatestPriceEur != foundListing.LatestPriceEur)
         {
+            foundListing.LatestPriceEur = listingToUpdate.LatestPriceEur;
             foundListing.Prices.Add(new Entities.Price
             {
                 Value = listingToUpdate.LatestPriceEur

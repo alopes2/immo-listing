@@ -1,0 +1,11 @@
+.NewListing {
+  border: 1px solid white;
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+  margin: 5px;
+
+  &:hover {
+    color: #ccc !important;
+  }
+}

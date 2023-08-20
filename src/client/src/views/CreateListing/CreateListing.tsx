@@ -4,7 +4,6 @@ import { SaveListing } from '../../types/SaveListing';
 import { useState } from 'react';
 import { PostalAddress } from '../../types/PostalAddress';
 import { useMutation } from 'react-query';
-import { Listing } from '../../types/Listing';
 
 const initialValue: SaveListing = {
   name: '',
@@ -45,7 +44,7 @@ const CreateListing = () => {
     },
     onSuccess: async (response) => {
       if (response.status < 400) {
-        navigate('/');
+        return navigate('/');
       }
 
       const data = await response.json();
@@ -55,6 +54,9 @@ const CreateListing = () => {
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
+    request.latest_price_eur = (
+      Number.parseFloat(request.latest_price_eur) * 100
+    ).toFixed();
     await mutation.mutateAsync();
   };
 

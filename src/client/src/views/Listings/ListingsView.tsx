@@ -5,6 +5,7 @@ import { FormEvent, useState } from 'react';
 import { GetListingsQuery } from '../../types/GetListingsQuery';
 import ListingsSearchForm from './ListingsSearchForm/ListingsSearchForm';
 import { Link } from 'react-router-dom';
+import classes from './Listings.module.scss';
 
 const queryInitialValue: GetListingsQuery = {
   name: '',
@@ -84,7 +85,9 @@ const ListingsView = () => {
 
   return (
     <>
-      <Link to="/create-listing">New Listing</Link>
+      <Link to="/create-listing" className={classes.NewListing}>
+        New Listing
+      </Link>
       <ListingsSearchForm
         query={query}
         search={search}
